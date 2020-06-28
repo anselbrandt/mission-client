@@ -1,14 +1,14 @@
-import React, { useState, useRef, useEffect } from 'react';
-import styles from './App.module.css';
-import io from 'socket.io-client';
-import Map from './Map';
-import { FlyToInterpolator } from 'react-map-gl';
-import Time from './Time';
-import Debug from './Debug';
-import Console from './Console';
-import ThreeD from './ThreeD';
-import Tree from './Tree';
-import useFetchLocation from './useFetchLocation';
+import React, { useState, useRef, useEffect } from "react";
+import styles from "./App.module.css";
+import io from "socket.io-client";
+import Map from "./Map";
+import { FlyToInterpolator } from "react-map-gl";
+import Time from "./Time";
+import Debug from "./Debug";
+import Console from "./Console";
+import ThreeD from "./ThreeD";
+import Tree from "./Tree";
+import useFetchLocation from "./useFetchLocation";
 
 const Montreal = {
   longitude: -73.648657,
@@ -19,19 +19,19 @@ const Montreal = {
 };
 
 const SOCKETSERVER =
-  process.env.REACT_APP_SOCKETSERVER || 'wss://missioncontrol.herokuapp.com';
+  process.env.REACT_APP_SOCKETSERVER || "wss://missioncontrol.herokuapp.com";
 const socket = io(SOCKETSERVER);
 
 function App() {
   const [input, setInput] = useState();
   const [history, setHistory] = useState([]);
-  const [piData, setPiData] = useState([]);
+  // const [piData, setPiData] = useState([]);
   const [newData, setNewData] = useState();
   const [time, setTime] = useState();
   const [clients, setClients] = useState();
   const [viewState, setViewState] = useState(Montreal);
   const handleChangeViewState = ({ viewState }) => setViewState(viewState);
-  const handleFlyTo = destination => {
+  const handleFlyTo = (destination) => {
     setViewState({
       ...viewState,
       ...destination,
@@ -47,26 +47,26 @@ function App() {
   useEffect(() => {
     if (socket.connected && location) {
       const identity = {
-        client: 'webclient',
+        client: "webclient",
         id: socket.id,
         location: location,
       };
-      socket.emit('identity', JSON.stringify(identity));
+      socket.emit("identity", JSON.stringify(identity));
     }
   }, [location]);
 
   useEffect(() => {
-    socket.on('pi message', data => {
-      setHistory(currentHistory => [...currentHistory, `pi> ${data}`]);
+    socket.on("pi message", (data) => {
+      setHistory((currentHistory) => [...currentHistory, `pi> ${data}`]);
     });
-    socket.on('pi data', data => {
-      setPiData(currentData => [...currentData, JSON.parse(data)]);
+    socket.on("pi data", (data) => {
+      // setPiData(currentData => [...currentData, JSON.parse(data)]);
       setNewData(JSON.parse(data));
     });
-    socket.on('time', timeString => {
+    socket.on("time", (timeString) => {
       setTime(timeString);
     });
-    socket.on('connected', data => {
+    socket.on("connected", (data) => {
       const message = JSON.parse(data);
       setClients(message);
     });
@@ -74,17 +74,17 @@ function App() {
 
   useEffect(() => {
     if (logRef.current) {
-      logRef.current.scrollIntoView({ behavior: 'smooth' });
+      logRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [history, logRef]);
 
-  const handleInput = event => setInput(event.currentTarget.value);
-  const handleSubmit = event => {
+  const handleInput = (event) => setInput(event.currentTarget.value);
+  const handleSubmit = (event) => {
     if (input) {
-      socket.emit('web', input);
+      socket.emit("web", input);
       event.preventDefault();
       setHistory([...history, input]);
-      inputRef.current.value = '';
+      inputRef.current.value = "";
       setInput();
     }
     event.preventDefault();
