@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import MapGL from 'react-map-gl';
-import { DeckGL, ScatterplotLayer } from 'deck.gl';
-import 'mapbox-gl/dist/mapbox-gl.css';
-import styles from './Map.module.css';
+import React, { useState } from "react";
+import MapGL from "react-map-gl";
+import { DeckGL, ScatterplotLayer } from "deck.gl";
+import "mapbox-gl/dist/mapbox-gl.css";
+import styles from "./Map.module.css";
 
 export default function Map({
   width,
@@ -14,7 +14,7 @@ export default function Map({
   let layers = [];
   const [hoveredObject, setHoveredObject] = useState();
 
-  const Tooltip = props => {
+  const Tooltip = (props) => {
     const { object } = props;
     return object ? (
       <div
@@ -32,8 +32,8 @@ export default function Map({
 
   if (clients) {
     const data = clients
-      .filter(client => client.location)
-      .map(client => {
+      .filter((client) => client.location)
+      .map((client) => {
         return {
           name: client.name,
           ip: client.ip,
@@ -42,7 +42,7 @@ export default function Map({
       });
     layers = [
       new ScatterplotLayer({
-        id: 'scatterplot-layer',
+        id: "scatterplot-layer",
         data,
         pickable: true,
         opacity: 0.8,
@@ -52,10 +52,10 @@ export default function Map({
         radiusMinPixels: 10,
         radiusMaxPixels: 10,
         lineWidthMinPixels: 0,
-        getPosition: d => d.position,
+        getPosition: (d) => d.position,
         getRadius: 10,
-        getFillColor: d => [255, 99, 71],
-        getLineColor: d => [0, 0, 0],
+        getFillColor: (d) => [255, 99, 71],
+        getLineColor: (d) => [0, 0, 0],
         autoHighlight: true,
         onHover: ({ object, x, y }) => {
           if (object) {
